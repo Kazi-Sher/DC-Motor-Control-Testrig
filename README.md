@@ -11,6 +11,10 @@ A compact experimental platform for embedded motor control using an STM32 Nucleo
 - 12 V DC supply
 
 ## Setup
-![Labelled experimental setup](images/Labelled_MotorRig.png)
+<p align="left">
+  <img src="images/Labelled_MotorRig.png" alt="Test Rig" width="500">
+</p>
 
-![Wiring diagram](images/MotorRig_bb.png)
+<p align="left">
+  <img src="images/MotorRig_bb.png" alt="Wiring Diagram" width="500">
+</p>
