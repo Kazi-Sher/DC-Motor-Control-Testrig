@@ -1,7 +1,7 @@
 # DC Motor Control Test Rig
 
 ## Overview
-A compact experimental platform for embedded motor control using an STM32 Nucleo-F446RE, BTS7960 (IBT-2) H-bridge, quadrature encoder feedback, and ACS712 current sensing.
+An experimental platform for embedded motor control using an STM32 Nucleo-F446RE, BTS7960 (IBT-2) H-bridge, quadrature encoder feedback, and ACS712 current sensing.
 
 ## Hardware
 - STM32 Nucleo-F446RE
