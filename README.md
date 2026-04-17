@@ -15,6 +15,7 @@ An experimental platform for embedded motor control using an STM32 Nucleo-F446RE
   <img src="images/Labelled_MotorRig.png" alt="Test Rig" width="500">
 </p>
 
+## Wiring Diagram
 <p align="left">
   <img src="images/MotorRig_bb.png" alt="Wiring Diagram" width="500">
 </p>
