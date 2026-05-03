@@ -32,8 +32,6 @@ The project is being developed as both a research portfolio artifact and a learn
 
 ## Repository Layout
 
-The repository is organized around reproducibility rather than file type alone. Folders marked *planned* will appear as their content lands.
-
 ```text
 hardware/       Hardware datasheets, wiring diagram, and rig photos
 firmware/       STM32 firmware, generated embedded code, board-level configuration
