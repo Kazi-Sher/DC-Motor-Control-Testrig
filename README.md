@@ -21,13 +21,13 @@ The project is being developed as both a research portfolio artifact and a learn
 ## Test Rig
 
 <p align="left">
-  <img src="images/Labelled_MotorRig.png" alt="Labeled DC motor control test rig" width="560">
+  <img src="images/Labelled_MotorRig.png" alt="Labeled DC motor control test rig" width="460">
 </p>
 
 ## Wiring Diagram
 
 <p align="left">
-  <img src="images/MotorRig_Wiring.png" alt="DC motor control test rig wiring diagram" width="560">
+  <img src="images/MotorRig_Wiring.png" alt="DC motor control test rig wiring diagram" width="460">
 </p>
 
 ## Repository Layout
