@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite it as below."
+title: "DC Motor Control Test Rig"
+authors:
+  - family-names: "Ahmed"
+    given-names: "Kazi Sher"
+version: "0.1.0"
+date-released: "2026-04-17"
+license: "MIT"
+url: "https://github.com/Kazi-Sher/DC-Motor-Control-Testrig"
+repository-code: "https://github.com/Kazi-Sher/DC-Motor-Control-Testrig"
+abstract: "An open-source DC motor characterization and embedded control test rig using STM32, encoder feedback, H-bridge drive, current sensing, MATLAB/Simulink analysis, and reproducible control experiments."
+keywords:
+  - DC motor control
+  - embedded control
+  - STM32
+  - motor characterization
+  - open-source hardware
+  - MATLAB
+  - Simulink
