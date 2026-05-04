@@ -2,7 +2,7 @@
 
 An open-source experimental test rig for DC motor characterization and embedded control. The rig will support reproducible experiments from basic motor modeling to advanced control design.
 
-The project is being developed as both a research portfolio artifact and a learning resource. The long-term goal is to document the hardware, firmware, datasets, model validation, and control experiments well enough that another learner can rebuild the rig and reproduce the main results. Detailed methods, equations, parameter values, and validation results are maintained in a companion technical report (forthcoming as `TECHNICAL_REPORT.md`).
+The long-term goal is to document the hardware, firmware, model validation, and control experiments well enough that another learner can rebuild the rig and reproduce the main results. Detailed methods, equations, parameter values, and validation results are maintained in a companion technical report (forthcoming as `TECHNICAL_REPORT.md`).
 
 ## Roadmap
 - [x] Hardware rig assembled and wired
