@@ -46,10 +46,10 @@ Motor parameters were identified by classical lumped-element methods: `R_a` from
 
 | Parameter | Value | Note |
 |---|---:|---|
-| `Ra` | 2.1 ohm | Armature resistance |
-| `La` | 100 uH | Armature inductance (assumed for now) |
+| `Ra` | 2.1 Ω | Armature resistance |
+| `La` | 100 µH | Armature inductance (assumed for now) |
 | `K` | 0.59 V s/rad | Back-EMF / torque constant (output-shaft referred) |
-| `J` | 2.03e-3 kg m^2 | Equivalent inertia (output-shaft referred) |
+| `J` | 2.03e-3 kg m² | Equivalent inertia (output-shaft referred) |
 | `b` | 0.0164 N m s/rad | Viscous friction (output-shaft referred) |
 
 Using these parameters, the model closely matches the measured position response for the voltage-step validation test (`NRMSE = 0.990`, `R^2 = 1.000`).
