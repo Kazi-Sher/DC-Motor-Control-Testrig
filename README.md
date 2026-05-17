@@ -58,9 +58,7 @@ Using these parameters, the model closely matches the measured position response
   <img src="results/model_validation.png" alt="Open-loop position model validation" width="620">
 </p>
 
-The motor was first characterized using an open-loop duty staircase. The identified model was then validated on a separate single-step experiment: a `0.6` duty command applied at `t = 0.5 s`.
-
-The model predicts the measured speed response closely:
+The motor was further characterized using an open-loop duty staircase. The identified model was then validated on a separate single-step experiment: a `0.6` duty command applied at `t = 0.5 s`. The model predicts the measured speed response closely:
 
 - RMSE over the step response: `0.23 rad/s`
 - Steady-state speed error: `+0.11%`
