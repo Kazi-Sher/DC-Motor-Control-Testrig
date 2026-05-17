@@ -66,8 +66,9 @@ The model predicts the measured speed response closely:
 - Steady-state speed error: `+0.11%`
 - Speed estimate: encoder position forward difference, `N = 4`
 
-![Speed validation](results/model_validation_speed_singlestep.png)
-
+<p align="left">
+  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="620">
+</p>
 
 
 ## Citation
