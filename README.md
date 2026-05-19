@@ -77,17 +77,17 @@ $$
 G(s)=\frac{K_{dc}}{\tau s+1}
 $$
 
-with $K_{dc}=19.524 \;\text{rad/s/duty}$ and $\tau=0.018\;\text{s}$. The controller gains were selected by matching the closed-loop denominator to a second-order target with $\omega_n=50\;\text{rad/s}$ and $\zeta=0.9$, giving $K_p = 0.0318$ and $K_i = 2.3049$.
+with $K_{dc} = 19.524~\text{rad/s/duty}$ and $\tau=0.018~\text{s}$. The controller gains were selected by matching the closed-loop denominator to a second-order target with $\omega_n=50~\text{rad/s}$ and $\zeta=0.9$, giving $K_p = 0.0318$ and $K_i = 2.3049$.
 
-The figure compares the saturation-aware simulation with the real motor-rig response for a $10\;\text{rad/s}$ speed step. The raw embedded speed estimate is shown for transparency, but performance metrics are computed from a 50 ms angle-slope estimate to reduce encoder quantization effects.
+The figure compares the saturation-aware simulation with the real motor-rig response for a $10~\text{rad/s}$ speed step. The raw embedded speed estimate is shown for transparency, but performance metrics are computed from a 50 ms angle-slope estimate to reduce encoder quantization effects.
 
 Angle-derived experimental metrics:
 
-- Peak speed: $10.51\; \text{rad/s}$
+- Peak speed: $10.51~\text{rad/s}$
 - Overshoot: $5.1\%$
-- Rise time: $44\; \text{ms}$
-- Settling time $2\%$: $127\; \text{ms}$
-- Steady-state error: approximately $0\; \text{rad/s}$
+- Rise time: $44~\text{ms}$
+- Settling time ($2\%$): $127~\text{ms}$
+- Steady-state error: Approx. $3.5e-4~\text{rad/s}$
 
 <p align="left">
   <img src="results/PI Speed Control.png" alt="PI Speed Control" width="600">
