@@ -55,7 +55,7 @@ Motor parameters were identified by classical lumped-element methods: `R_a` from
 Using these parameters, the model closely matches the measured position response for the voltage-step validation test (`NRMSE = 0.990`, `R^2 = 1.000`).
 
 <p align="left">
-  <img src="results/model_validation.png" alt="Open-loop position model validation" width="620">
+  <img src="results/model_validation.png" alt="Open-loop position model validation" width="600">
 </p>
 
 The motor was further characterized using an open-loop duty staircase. The identified model was then validated on a separate single-step experiment: a `0.6` duty command applied at `t = 0.5 s`. The model predicts the measured speed response closely:
@@ -65,7 +65,32 @@ The motor was further characterized using an open-loop duty staircase. The ident
 - Speed estimate: encoder position forward difference, `N = 4`
 
 <p align="left">
-  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="620">
+  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="600">
+</p>
+
+
+## PI Speed Control
+
+PI speed control was designed using the experimentally identified first-order speed model:
+
+$$
+G(s)=\frac{K_{dc}}{\tau s+1}
+$$
+
+with $K_{dc}=19.524 \;\text{rad/s/duty}$ and $\tau=0.018\;\text{s}$. The controller gains were selected by matching the closed-loop denominator to a second-order target with $\omega_n=50\;\text{rad/s}$ and $\zeta=0.9$, giving $K_p = 0.0318$ and $K_i = 2.3049$.
+
+The figure compares the saturation-aware simulation with the real motor-rig response for a $10\;\text{rad/s}$ speed step. The raw embedded speed estimate is shown for transparency, but performance metrics are computed from a 50 ms angle-slope estimate to reduce encoder quantization effects.
+
+Angle-derived experimental metrics:
+
+- Peak speed: $10.51\; \text{rad/s}$
+- Overshoot: $5.1\%$
+- Rise time: $44\; \text{ms}$
+- Settling time $2\%$: $127\; \text{ms}$
+- Steady-state error: approximately $0\; \text{rad/s}$
+
+<p align="left">
+  <img src="results/PI Speed Control.png" alt="PI Speed Control" width="600">
 </p>
 
 
