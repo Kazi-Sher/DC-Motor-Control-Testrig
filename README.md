@@ -17,12 +17,12 @@ images/         README-facing images such as labeled photos and wiring diagrams
 ```
 
 ## Roadmap
-- [x] Hardware rig assembled and wired
-- [x] Open-loop position-based model validation
-- [ ] PID control
-- [ ] State-space control + observer + advanced control algorithms
+- [x] Hardware rig assembled
+- [x] Position and speed based model validation
+- [x] PI speed control
+- [ ] State-space control
 
-## Hardware / Test Rig
+## Test Rig
 
 - STM32 Nucleo-F446RE microcontroller board
 - 12 V DC geared motor with quadrature encoder, JGA25-371 class
@@ -31,7 +31,7 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - 12 V DC power supply
 
 <p align="left">
-  <img src="images/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="800">
+  <img src="images/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="850">
 </p>
 
 ## Motor Identification and Model Validation
