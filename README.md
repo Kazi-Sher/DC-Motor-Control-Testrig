@@ -30,7 +30,7 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - ACS712 5 A current sensor
 - 12 V DC power supply
 
-<p align="left">
+<p align="center">
   <img src="images/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="850">
 </p>
 
@@ -46,7 +46,7 @@ Motor parameters were identified by classical lumped-element methods: `R_a` from
 | `J` | 2.03e-3 kg m² | Equivalent inertia (output-shaft referred) |
 | `b` | 0.0164 N m s/rad | Viscous friction (output-shaft referred) |
 
-Using these parameters, the model closely matches the measured position response for the voltage-step validation test (`NRMSE = 0.990`, `R^2 = 1.000`).
+Using these parameters, the model closely matches the measured position response for the voltage-step validation test (`NRMSE = 0.955`, `R^2 = 0.998`).
 
 <p align="center">
   <img src="results/model_validation_combined.png" alt="Open-loop position and speed model validation" width="700">
@@ -54,9 +54,10 @@ Using these parameters, the model closely matches the measured position response
 
 The motor was further characterized using an open-loop duty staircase. The identified model was then validated on a separate single-step experiment: a `0.6` duty command applied at `t = 0.5 s`. The model predicts the measured speed response closely:
 
-- RMSE over the step response: `0.23 rad/s`
-- Steady-state speed error: `+0.11%`
-- Speed estimate: encoder position forward difference, `N = 4`
+- RMSE over the step response: `0.26 rad/s`
+- Steady-state speed error: `+1.5%`
+- Speed estimate: encoder position forward difference with 16 ms window
+
 
 ## PI Speed Control
 
