@@ -49,7 +49,7 @@ Motor parameters were identified by classical lumped-element methods: `R_a` from
 Using these parameters, the model closely matches the measured position response for the voltage-step validation test (`NRMSE = 0.955`, `R^2 = 0.998`).
 
 <p align="center">
-  <img src="results/model_validation_combined.png" alt="Open-loop position and speed model validation" width="700">
+  <img src="results/model_validation_combined.png" alt="Open-loop position and speed model validation" width="650">
 </p>
 
 The motor was further characterized using an open-loop duty staircase. The identified model was then validated on a separate single-step experiment: a `0.6` duty command applied at `t = 0.5 s`. The model predicts the measured speed response closely:
