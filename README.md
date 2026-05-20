@@ -59,7 +59,7 @@ The motor was further characterized using an open-loop duty staircase. The ident
 - Speed estimate: encoder position forward difference, `N = 4`
 
 <p align="center">
-  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="450">
+  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="500">
 </p>
 
 
@@ -78,13 +78,13 @@ The figure below compares the saturation-aware simulation with the real motor-ri
 Angle-derived experimental metrics:
 
 - Peak speed: $10.51~\text{rad/s}$
-- Overshoot: $5.1\%$
+- Overshoot: $5.1%$
 - Rise time: $44~\text{ms}$
 - Settling time ($2\%$): $127~\text{ms}$
 - Steady-state error: Approx. $3.5e-4~\text{rad/s}$
 
-<p align="left">
-  <img src="results/PI Speed Control.png" alt="PI Speed Control" width="600">
+<p align="center">
+  <img src="results/PI Speed Control.png" alt="PI Speed Control" width="450">
 </p>
 
 
