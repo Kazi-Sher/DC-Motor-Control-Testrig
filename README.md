@@ -31,13 +31,7 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - 12 V DC power supply
 
 <p align="left">
-  <img src="images/Labelled_MotorRig.png" alt="Labeled DC motor control test rig" width="460">
-</p>
-
-## Wiring Diagram
-
-<p align="left">
-  <img src="images/MotorRig_Wiring.png" alt="DC motor control test rig wiring diagram" width="460">
+  <img src="images/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="800">
 </p>
 
 ## Motor Identification and Model Validation
@@ -71,15 +65,15 @@ The motor was further characterized using an open-loop duty staircase. The ident
 
 ## PI Speed Control
 
-PI speed control was designed using the experimentally identified first-order speed model:
+PI speed control was designed using the experimentally identified first-order speed model of motor:
 
 $$
 G(s)=\frac{K_{dc}}{\tau s+1}
 $$
 
-with $K_{dc} = 19.524~\text{rad/s/duty}$ and $\tau=0.018~\text{s}$. The controller gains were selected by matching the closed-loop denominator to a second-order target with $\omega_n=50~\text{rad/s}$ and $\zeta=0.9$, giving $K_p = 0.0318$ and $K_i = 2.3049$.
+where $K_{dc} = 19.524~\text{rad/s/duty}$ and $\tau=0.018~\text{s}$. The controller gains were selected by matching the closed-loop denominator to a second-order target with $\omega_n=50~\text{rad/s}$ and $\zeta=0.9$, giving $K_p = 0.0318$ and $K_i = 2.3049$.
 
-The figure compares the saturation-aware simulation with the real motor-rig response for a $10~\text{rad/s}$ speed step. The raw embedded speed estimate is shown for transparency, but performance metrics are computed from a 50 ms angle-slope estimate to reduce encoder quantization effects.
+The figure below compares the saturation-aware simulation with the real motor-rig response for a $10~\text{rad/s}$ speed step. The raw embedded speed estimate is shown for transparency, but performance metrics are computed from a 50 ms angle-slope estimate to reduce encoder quantization effects.
 
 Angle-derived experimental metrics:
 
