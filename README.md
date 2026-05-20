@@ -58,8 +58,8 @@ The motor was further characterized using an open-loop duty staircase. The ident
 - Steady-state speed error: `+0.11%`
 - Speed estimate: encoder position forward difference, `N = 4`
 
-<p align="left">
-  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="500">
+<p align="center">
+  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="450">
 </p>
 
 
