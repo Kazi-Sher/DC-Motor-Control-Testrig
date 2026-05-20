@@ -31,7 +31,7 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - 12 V DC power supply
 
 <p align="left">
-  <img src="images/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="850">
+  <img src="images/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="900">
 </p>
 
 ## Motor Identification and Model Validation
