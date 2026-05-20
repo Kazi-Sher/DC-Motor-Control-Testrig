@@ -31,7 +31,7 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - 12 V DC power supply
 
 <p align="left">
-  <img src="images/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="900">
+  <img src="images/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="850">
 </p>
 
 ## Motor Identification and Model Validation
@@ -59,7 +59,7 @@ The motor was further characterized using an open-loop duty staircase. The ident
 - Speed estimate: encoder position forward difference, `N = 4`
 
 <p align="left">
-  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="600">
+  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="500">
 </p>
 
 
