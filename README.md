@@ -49,7 +49,7 @@ Motor parameters were identified by classical lumped-element methods: `R_a` from
 Using these parameters, the model closely matches the measured position response for the voltage-step validation test (`NRMSE = 0.990`, `R^2 = 1.000`).
 
 <p align="left">
-  <img src="results/model_validation.png" alt="Open-loop position model validation" width="600">
+  <img src="results/model_validation_combined.png" alt="Open-loop position and speed model validation" width="800">
 </p>
 
 The motor was further characterized using an open-loop duty staircase. The identified model was then validated on a separate single-step experiment: a `0.6` duty command applied at `t = 0.5 s`. The model predicts the measured speed response closely:
@@ -57,11 +57,6 @@ The motor was further characterized using an open-loop duty staircase. The ident
 - RMSE over the step response: `0.23 rad/s`
 - Steady-state speed error: `+0.11%`
 - Speed estimate: encoder position forward difference, `N = 4`
-
-<p align="center">
-  <img src="results/model_validation_speed_singlestep.png" alt="Open-loop speed model validation" width="500">
-</p>
-
 
 ## PI Speed Control
 
@@ -78,7 +73,7 @@ The figure below compares the saturation-aware simulation with the real motor-ri
 Angle-derived experimental metrics:
 
 - Peak speed: $10.51~\text{rad/s}$
-- Overshoot: $5.1%$
+- Overshoot: 5.1%
 - Rise time: $44~\text{ms}$
 - Settling time ($2\%$): $127~\text{ms}$
 - Steady-state error: Approx. $3.5e-4~\text{rad/s}$
