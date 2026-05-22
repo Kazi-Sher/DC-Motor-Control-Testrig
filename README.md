@@ -76,7 +76,7 @@ Angle-derived experimental metrics:
 - Peak speed: $10.51~\text{rad/s}$
 - Overshoot: 5.1%
 - Rise time: $44~\text{ms}$
-- Settling time ($2\%$): $127~\text{ms}$
+- Settling time (2%): $127~\text{ms}$
 - Steady-state error: Approx. $3.5e-4~\text{rad/s}$
 
 <p align="center">
