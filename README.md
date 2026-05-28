@@ -20,7 +20,7 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - [x] Hardware rig assembled
 - [x] Position and speed based model validation
 - [x] PI speed control
-- [ ] State-space control
+- [x] State-space control (pole placement + LQR)
 
 ## Test Rig
 
@@ -82,6 +82,44 @@ Angle-derived experimental metrics:
 <p align="center">
   <img src="results/PI Speed Control.png" alt="PI Speed Control" width="450">
 </p>
+
+
+
+## State-Space Position Control
+
+The PI speed plant was extended to a 2-state position model `x = [θ, ω]ᵀ` and a 3-state form `x_aug = [x_i, θ, ω]ᵀ` with an integrator on the tracking error. Three controller families were designed and deployed with references of 0.20 rad and 0.50 rad:
+
+1. **2-state pole placement (PP2):** `K = [K_θ, K_ω]` plus feedforward `Nbar`
+2. **3-state pole placement with integrator (PP3):** `K_aug = [K_i, K_θ, K_ω]`, no `Nbar` since the integrator handles DC tracking
+3. **LQR** on the same 3-state plant: gains from `lqr(A_aug, B_aug, Q, R)`
+
+### Pole placement (PP): dead-zone discovery and integrator fix
+
+Without the integrator, the controller stalls before reaching the reference because the residual duty falls below the motor's static-friction threshold. Adding an integrator state eliminates this offset and the saturation-aware simulation tracks the 3-state hardware response within the noise floor.
+
+<p align="center">
+  <img src="results/PP_SS.png" alt="State-space pole placement: dead-zone and integrator fix; model vs hardware" width="850">
+</p>
+
+Results (reference = 0.20 rad):
+
+- **2-state PP-gentle:** steady-state offset ≈ **26 %** (motor stalls at 0.148 rad)
+- **3-state PP-gentle:** steady-state offset ≈ **1 %** (reaches 0.20 rad)
+- **Cross-validated motor breakaway threshold:** ≈ **6 % PWM duty**, from residual steady-state command across four PP2 runs
+- **Model vs hardware (PP3-gentle):** steady-state match within encoder resolution
+
+### LQR: methodology comparison and a limit-cycle finding
+
+LQR on the same plant chooses gains by minimizing a quadratic cost rather than placing specific poles. Conservative weights produce a clean, low-jitter response but at much lower bandwidth than the equivalent pole-placement design. Aggressive weights raise the bandwidth. But on hardware, the closed loop falls into a sustained limit cycle: position still tracks the reference, but the control effort thrashes between duty saturation rails.
+
+<p align="center">
+  <img src="results/LQR_SS.png" alt="State-space LQR: bandwidth tradeoff and limit-cycle finding" width="850">
+</p>
+
+Results:
+
+- **LQR-modest (ref 0.20 rad):** 10–90 rise time ≈ **1.26 s** vs PP3-nominal's **0.087 s** with comparable steady-state accuracy but ~14× slower bandwidth.
+- **LQR-aggressive (ref 0.50 rad):** position σ over last 1 s ≈ **5 mrad**, but duty σ ≈ **0.47** with peaks at the ±0.50 saturation rails; peak current ≈ **4.4 A**. Linear-optimal design failed to anticipate the interaction of encoder quantization, motor dead-zone, and speed-estimator lag at high bandwidth.
 
 
 ## Citation
