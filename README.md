@@ -20,7 +20,7 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - [x] Hardware rig assembled
 - [x] Position and speed based model validation
 - [x] PI speed control
-- [x] State-space control (pole placement + LQR)
+- [x] State-space position control (pole placement + LQR)
 
 ## Test Rig
 
@@ -120,6 +120,37 @@ Results:
 
 - **LQR-modest (ref 0.20 rad):** 10–90 rise time ≈ **1.26 s** vs PP3-nominal's **0.087 s** with comparable steady-state accuracy but ~14× slower bandwidth.
 - **LQR-aggressive (ref 0.50 rad):** position σ over last 1 s ≈ **5 mrad**, but duty σ ≈ **0.47** with peaks at the ±0.50 saturation rails; peak current ≈ **4.4 A**. Linear-optimal design failed to anticipate the interaction of encoder quantization, motor dead-zone, and speed-estimator lag at high bandwidth.
+
+
+### Luenberger observer: model-based speed feedback
+
+A discrete Luenberger observer was added to the 3-state pole-placement position controller. The observer estimates `x = [theta, omega]^T` from commanded duty and encoder position; it does not differentiate the encoder signal for speed. The controller gains are unchanged from the PP3-nominal design (`K = [-103.7, 6.04, 0.073]`); only the speed-feedback source is switched between the filtered encoder derivative (`omega_meas`) and observer estimate (`speed_hat`).
+
+<p align="center">
+  <img src="results/Luenberger_position_tracking.png" alt="Luenberger observer feedback: position tracking and duty command" width="850">
+</p>
+
+Results for a `0.20 rad` position step:
+
+- **Observer feedback:** mean steady-state position `0.20000 rad` vs `0.1990 rad` with encoder-speed feedback; both are sub-encoder-count errors, but observer feedback brings the mean error close to zero.
+- **Overshoot:** `1.1%` with observer feedback vs `2.7%` with encoder-speed feedback.
+- **Rise time:** `92 ms` with observer feedback vs `83 ms` with encoder-speed feedback.
+- **Duty ripple:** steady-state duty σ drops from `0.031` to `0.013`; duty peak-to-peak drops from `0.111` to `0.047`.
+- **Trade-off:** steady-state position σ rises from `0.15 mrad` to `1.50 mrad`, while peak-to-peak position motion remains bounded to one encoder quantum (`3.21 mrad`).
+
+The observer was also tested with an intentionally incorrect initial speed estimate, `omega_hat(0) = 5 rad/s`.
+
+<p align="center">
+  <img src="results/Luenberger_obs_conv.png" alt="Luenberger observer convergence from incorrect initial speed estimate" width="850">
+</p>
+
+Convergence results:
+
+- **Decoupled observer test:** encoder feedback remains in control, `ref = 0`, and the motor stays at rest. The observer estimate converges below `0.1 rad/s` in `21 ms` with a single threshold crossing.
+- **Coupled observer-in-loop test:** the same incorrect initial estimate is fed to the controller. The controller initially saturates duty and moves the motor, but the closed loop remains stable and recovers to track the reference.
+
+This demonstrates both the estimator's standalone initial-condition recovery and the closed loop's tolerance of observer-state mismatch.
+
 
 
 ## Citation
