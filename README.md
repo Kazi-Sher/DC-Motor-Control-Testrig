@@ -21,6 +21,8 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - [x] Position and speed based model validation
 - [x] PI speed control
 - [x] State-space position control (pole placement + LQR)
+- [x] Observer-based estimation (Luenberger + Kalman / LQG)
+- [x] Multi-controller benchmark (PID, pole placement, LQR, observer-based)
 
 ## Test Rig
 
@@ -119,7 +121,7 @@ LQR on the same plant chooses gains by minimizing a quadratic cost rather than p
 Results:
 
 - **LQR-modest (ref 0.20 rad):** 10–90 rise time ≈ **1.26 s** vs PP3-nominal's **0.087 s** with comparable steady-state accuracy but ~14× slower bandwidth.
-- **LQR-aggressive (ref 0.50 rad):** position σ over last 1 s ≈ **5 mrad**, but duty σ ≈ **0.47** with peaks at the ±0.50 saturation rails; peak current ≈ **4.4 A**. Linear-optimal design failed to anticipate the interaction of encoder quantization, motor dead-zone, and speed-estimator lag at high bandwidth.
+- **LQR-aggressive (ref 0.50 rad):** position σ over last 1 s ≈ **5 mrad**, but duty σ ≈ **0.47** with peaks at the ±0.50 saturation rails; peak current ≈ **4.4 A**. The linear-optimal design did not account for encoder quantization, motor dead-zone, duty saturation, and high feedback gains interacting on real hardware.
 
 
 ### Luenberger observer: model-based speed feedback
@@ -151,6 +153,55 @@ Convergence results:
 
 This demonstrates both the estimator's standalone initial-condition recovery and the closed loop's tolerance of observer-state mismatch.
 
+
+### Kalman estimator (LQG): optimal estimation and a limit-cycle test
+
+The observer architecture was kept identical and only the gain was redesigned: the pole-placement gain `L` was replaced by a steady-state Kalman gain. The measurement-noise covariance `R` is set from encoder quantization (`q²/12`, `q = 3.21 mrad`); the process-noise covariance `Q` is tuned for comparable estimator bandwidth. Paired with the LQR controller, this gives the LQG test case.
+
+<p align="center">
+  <img src="results/LQG_estimator.png" alt="Kalman estimator: position tracking and free-run convergence" width="850">
+</p>
+
+Estimator results (`0.20 rad` step, Kalman estimate feeding the PP3 loop):
+
+- **Tracking:** sub-encoder-count steady-state error and `1.1%` overshoot — on par with the Luenberger result, confirming the Kalman estimator deploys correctly on hardware.
+- **Free-run convergence:** with a deliberately wrong initial speed (`omega_hat(0) = 5 rad/s`), controller decoupled, and motor at rest, the Kalman estimate is underdamped. It first crosses `0.1 rad/s` at `14 ms`, then sustains below threshold from `27 ms`; the Luenberger observer was monotonic and reached the same sustained threshold in `21 ms`.
+
+A second test asked whether a cleaner speed estimate could cure the LQR limit cycle found above. The **identical** LQR-aggressive gain was run with the speed feedback switched between the encoder derivative and the Kalman estimate — one signal changed, nothing else (reference `0.20 rad`, duty limit `±0.35`).
+
+<p align="center">
+  <img src="results/LQG_limit_cycle.png" alt="Limit-cycle test: same LQR gain, encoder vs Kalman speed feedback" width="850">
+</p>
+
+Limit-cycle test results:
+
+- The limit cycle **persists with both speed sources**: the duty command thrashes between the `±0.35` saturation rails (steady-state duty `σ ≈ 0.31` with encoder, `0.34` with Kalman) and neither case settles.
+- The Kalman estimate **did not suppress** the limit cycle — it amplified the position oscillation (overshoot `5.9% → 18.7%`, peak current `2.85 A → 3.33 A`).
+- **Conclusion:** these runs strongly suggest the limit cycle is actuator/dead-zone/saturation driven, not primarily speed-estimate-noise driven. The LQR speed gain `K_ω` is 4–13× the pole-placement value, so replacing the speed estimate alone is not enough; pole placement with observer feedback remains the clean deployable design on this rig.
+
+
+## Multi-Controller Benchmark
+
+Four controller entries were run on the **identical** `0.20 rad` step at the same `±0.35` duty limit, spanning the classical → modern → optimal progression: PID, pole placement with observer feedback (Luenberger and Kalman), and aggressive LQG.
+
+<p align="center">
+  <img src="results/Controller_Benchmark.png" alt="Multi-controller benchmark: position tracking and control effort on a common step" width="850">
+</p>
+
+| Controller | Rise `t_r` | Overshoot | Settling `t_s` | `e_ss` | Duty `σ` | Effort `∫u²` | `I_peak` |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| PID (classical) | 550 ms | 1.1 % | 641 ms | −1.1 mrad | 0.003 | 0.06 | 1.94 A |
+| PP3 + Luenberger | 92 ms | 1.1 % | 284 ms | 0.01 mrad | 0.013 | 0.04 | 1.65 A |
+| PP3 + Kalman (LQG est.) | 90 ms | 1.1 % | 132 ms | 0.26 mrad | 0.028 | 0.02 | 1.97 A |
+| LQG-aggressive (optimal-control gain + Kalman) | 299 ms | 18.7 % | — * | −0.35 mrad | 0.342 | 0.53 | 3.33 A |
+
+<sub>* never settles within `±2%`: sustained limit cycle. Steady-state stats over the final 1 s; encoder quantum = 3.21 mrad.</sub>
+
+- **PID** tracks cleanly to sub-quantum error but is ~6× slower, climbing in a visible dead-zone staircase, at the lowest control effort.
+- **Pole placement with observer feedback** is the best overall design: ~`90 ms` rise, sub-quantum steady-state error, and the lowest control effort. The observer choice is a minor trade — Luenberger settles with lower duty `σ`, Kalman settles fastest.
+- **LQG-aggressive** overshoots and never settles; the dead-zone/saturation limit cycle dominates at ~10–17× the control effort and ~2× the peak current of the observer-based designs.
+
+The headline result: on this rig, **modern observer-based pole placement is the deployable winner.** Better state *estimation* (Luenberger → Kalman) improves the feedback signal, but textbook-optimal *control* (LQR) requires explicit dead-zone / anti-windup handling before it is usable — a practical lesson that only the hardware experiment reveals.
 
 
 ## Citation
