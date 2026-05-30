@@ -182,12 +182,12 @@ Four controller entries were run on the **identical** `0.20 rad` step at the sam
   <img src="results/Controller_Benchmark.png" alt="Multi-controller benchmark: position tracking and control effort on a common step" width="850">
 </p>
 
-| Controller | Rise `t_r` | Overshoot | Settling `t_s` | `e_ss` | Duty `σ` | Effort `∫u²` | `I_peak` |
+| Controller | Rise `t_r` [ms] | Overshoot [%] | Settling `t_s` [ms] | `e_ss` [mrad] | Duty `σ` | Effort `∫u²dt` | `I_peak` [A] |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| PID (classical) | 550 ms | 1.1 % | 641 ms | −1.1 mrad | 0.003 | 0.06 | 1.94 A |
-| PP3 + Luenberger | 92 ms | 1.1 % | 284 ms | 0.01 mrad | 0.013 | 0.04 | 1.65 A |
-| PP3 + Kalman (LQG est.) | 90 ms | 1.1 % | 132 ms | 0.26 mrad | 0.028 | 0.02 | 1.97 A |
-| LQG-aggressive (optimal-control gain + Kalman) | 299 ms | 18.7 % | — * | −0.35 mrad | 0.342 | 0.53 | 3.33 A |
+| PID (classical) | 550 | 1.1 | 641 | −1.1 | 0.003 | 0.06 | 1.94 |
+| PP3 + Luenberger | 92 | 1.1 | 284 | 0.01 | 0.013 | 0.04 | 1.65 |
+| PP3 + Kalman (LQG est.) | 90 | 1.1 | 132 | 0.26 | 0.028 | 0.02 | 1.97 |
+| LQG-aggressive (optimal-control gain + Kalman) | 299 | 18.7 | — * | −0.35 | 0.342 | 0.53 | 3.33 |
 
 <sub>* never settles within `±2%`: sustained limit cycle. Steady-state stats over the final 1 s; encoder quantum = 3.21 mrad.</sub>
 
