@@ -1,19 +1,14 @@
 # DC Motor Control Test Rig
 
-An open-source experimental test rig for DC motor characterization and embedded control. The rig will support reproducible experiments from basic motor modeling to advanced control design.
-
-Detailed methods, equations, parameter values, and validation results are maintained in a companion technical report (forthcoming as `TECHNICAL_REPORT.md`).
+A low-cost open-source experimental test rig for DC motor characterization and embedded control. The rig supports reproducible experiments from basic motor modeling to advanced control design.
 
 ## Repository Layout
-
 ```text
-hardware/       Hardware datasheets, wiring diagram, and rig photos
+hardware/       Hardware datasheets, wiring diagram, and rig image
 firmware/       STM32 firmware, generated embedded code, board-level configuration
 matlab/         MATLAB scripts/Simulink models for identification, validation, control
 data/           Raw and processed experiment data used to reproduce plots/metrics
-results/        Generated figures, validation plots, control outputs
-docs/           Build notes, operating instructions, safety notes, method explanations
-images/         README-facing images such as labeled photos and wiring diagrams
+results/        Result plots
 ```
 
 ## Roadmap
@@ -25,7 +20,6 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - [x] Multi-controller benchmark (PID, pole placement, LQR, observer-based)
 
 ## Test Rig
-
 - STM32 Nucleo-F446RE microcontroller board
 - 12 V DC geared motor with quadrature encoder, JGA25-371 class
 - IBT-2 / BTS7960 H-bridge motor driver
@@ -33,7 +27,7 @@ images/         README-facing images such as labeled photos and wiring diagrams
 - 12 V DC power supply
 
 <p align="center">
-  <img src="images/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="850">
+  <img src="hardware/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="850">
 </p>
 
 ## Motor Identification and Model Validation
