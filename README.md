@@ -17,7 +17,7 @@ results/        Result plots
 - [x] PI speed control
 - [x] State-space position control (pole placement + LQR)
 - [x] Observer-based estimation (Luenberger + Kalman / LQG)
-- [x] Multi-controller benchmark (PID, pole placement, LQR, observer-based)
+- [x] Controller comparison (PID, observer-based pole placement, and LQG)
 
 ## Test Rig
 - STM32 Nucleo-F446RE microcontroller board
@@ -174,12 +174,12 @@ Limit-cycle test results:
 - **Conclusion:** these runs strongly suggest the limit cycle is actuator/dead-zone/saturation driven, not primarily speed-estimate-noise driven. The LQR speed gain `K_ω` is 4–13× the pole-placement value, so replacing the speed estimate alone is not enough; pole placement with observer feedback remains the clean deployable design on this rig.
 
 
-## Multi-Controller Benchmark
+## Controller Comparison
 
-Four controller entries were run on the **identical** `0.20 rad` step at the same `±0.35` duty limit, spanning the classical → modern → optimal progression: PID, pole placement with observer feedback (Luenberger and Kalman), and aggressive LQG.
+Four controller configurations were tested using the same `0.20 rad` step input and `±0.35` duty limit: PID, pole placement with Luenberger observer feedback, pole placement with Kalman estimator feedback, and aggressive LQG.
 
 <p align="center">
-  <img src="results/Controller_Benchmark.png" alt="Multi-controller benchmark: position tracking and control effort on a common step" width="850">
+  <img src="results/Controller_Benchmark.png" alt="Controller comparison: position tracking and control effort for a common step input" width="850">
 </p>
 
 | Controller | Rise `t_r` [ms] | Overshoot [%] | Settling `t_s` [ms] | `e_ss` [mrad] | Duty `σ` | Effort `∫u²dt` | `I_peak` [A] |
