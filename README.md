@@ -1,6 +1,6 @@
 # DC Motor Control Test Rig
 
-A low-cost open-source experimental test rig for DC motor characterization and embedded control. The rig supports reproducible experiments from basic motor modeling to advanced control design.
+A low-cost open-source experimental test rig for DC motor characterization and embedded control. The rig supports reproducible experiments from basic motor modeling to advanced control design. Pushing each controller to its best possible tuning is not the current goal of the project.
 
 ## Repository Layout
 ```text
@@ -89,9 +89,9 @@ The PI speed plant was extended to a 2-state position model `x = [θ, ω]ᵀ` an
 2. **3-state pole placement with integrator (PP3):** `K_aug = [K_i, K_θ, K_ω]`, no `Nbar` since the integrator handles DC tracking
 3. **LQR** on the same 3-state plant: gains from `lqr(A_aug, B_aug, Q, R)`
 
-### Pole placement (PP): dead-zone discovery and integrator fix
+### Pole placement (PP): dead zone discovery and integrator fix
 
-Without the integrator, the controller stalls before reaching the reference because the residual duty falls below the motor's static-friction threshold. Adding an integrator state eliminates this offset and the saturation-aware simulation tracks the 3-state hardware response within the noise floor.
+Without the integrator, the controller stalls before reaching the reference because the residual duty falls below the motor's static friction threshold. Adding an integrator state eliminates this offset and the saturation-aware simulation tracks the 3-state hardware response within the noise floor.
 
 <p align="center">
   <img src="results/PP_SS.png" alt="State-space pole placement: dead-zone and integrator fix; model vs hardware" width="850">
@@ -100,8 +100,8 @@ Without the integrator, the controller stalls before reaching the reference beca
 Results (reference = 0.20 rad):
 
 - **2-state PP-gentle:** steady-state offset ≈ **26 %** (motor stalls at 0.148 rad)
-- **3-state PP-gentle:** steady-state offset ≈ **1 %** (reaches 0.20 rad)
-- **Cross-validated motor breakaway threshold:** ≈ **6 % PWM duty**, from residual steady-state command across four PP2 runs
+- **Residual duty at motor stall:** ≈ **6 % PWM duty** (similar in four PP2 runs), which is below the dead zone measured at around 11-15 % (in separate tests). Since the PP2 output depends only on current position and speed, the duty gets frozen at this value once the motor stops. An integrator is needed to keep raising the duty.
+- **3-state PP-gentle (with integrator):** steady-state offset ≈ **1 %** (reaches 0.20 rad)
 - **Model vs hardware (PP3-gentle):** steady-state match within encoder resolution
 
 ### LQR: methodology comparison and a limit-cycle finding
@@ -117,6 +117,7 @@ Results:
 - **LQR-modest (ref 0.20 rad):** 10–90 rise time ≈ **1.26 s** vs PP3-nominal's **0.087 s** with comparable steady-state accuracy but ~14× slower bandwidth.
 - **LQR-aggressive (ref 0.50 rad):** position σ over last 1 s ≈ **5 mrad**, but duty σ ≈ **0.47** with peaks at the ±0.50 saturation rails; peak current ≈ **4.4 A**. The linear-optimal design did not account for encoder quantization, motor dead-zone, duty saturation, and high feedback gains interacting on real hardware.
 
+More weights can be tried to improve the LQR controller performance.
 
 ### Luenberger observer: model-based speed feedback
 
@@ -192,10 +193,10 @@ Four controller configurations were tested using the same `0.20 rad` step input 
 <sub>* never settles within `±2%`: sustained limit cycle. Steady-state stats over the final 1 s; encoder quantum = 3.21 mrad.</sub>
 
 - **PID** tracks cleanly to sub-quantum error but is ~6× slower, climbing in a visible dead-zone staircase, at the lowest control effort.
-- **Pole placement with observer feedback** is the best overall design: ~`90 ms` rise, sub-quantum steady-state error, and the lowest control effort. The observer choice is a minor trade — Luenberger settles with lower duty `σ`, Kalman settles fastest.
+- **Pole placement with observer feedback** is the best overall design: ~`90 ms` rise, sub-quantum steady-state error, and the lowest control effort. The observer choice is a minor trade: Luenberger settles with lower duty `σ`, Kalman settles fastest.
 - **LQG-aggressive** overshoots and never settles; the dead-zone/saturation limit cycle dominates at ~10–17× the control effort and ~2× the peak current of the observer-based designs.
 
-The headline result: on this rig, **modern observer-based pole placement is the deployable winner.** Better state *estimation* (Luenberger → Kalman) improves the feedback signal, but textbook-optimal *control* (LQR) requires explicit dead-zone / anti-windup handling before it is usable — a practical lesson that only the hardware experiment reveals.
+Main result: Pole placement with an observer resulted in the best performance. Better state *estimation* (Luenberger → Kalman) improves the feedback signal, but textbook-optimal *control* (LQR) requires explicit dead-zone / anti-windup handling before it is usable — a practical lesson that only the hardware experiment reveals.
 
 
 ## Citation
