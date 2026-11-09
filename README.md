@@ -135,7 +135,7 @@ Results for a `0.20 rad` position step:
 - **Overshoot:** `1.1%` with observer feedback vs `2.7%` with encoder-speed feedback (one encoder count difference).
 - **Rise time:** `92 ms` with observer feedback vs `83 ms` with encoder-speed feedback.
 
-The observer was also tested with an intentionally incorrect initial speed estimate, `omega_hat(0) = 5 rad/s`.
+In practice, an observer starts by guessing a speed (usually zero). Obviously this is a wrong estimate initially. How quickly this error is addressed depends on the observer gain `L` and not on the controller. To test this on the rig, the observer was tested with an intentionally wrong initial speed estimate: `omega_hat(0) = 5 rad/s`.
 
 <p align="center">
   <img src="results/Luenberger_obs_conv.png" alt="Luenberger observer convergence from incorrect initial speed estimate" width="850">
@@ -143,10 +143,10 @@ The observer was also tested with an intentionally incorrect initial speed estim
 
 Convergence results:
 
-- **Decoupled observer test:** encoder feedback remains in control, `ref = 0`, and the motor stays at rest. The observer estimate converges below `0.1 rad/s` in `21 ms` with a single threshold crossing.
-- **Coupled observer-in-loop test:** the same incorrect initial estimate is fed to the controller. The controller initially saturates duty and moves the motor, but the closed loop remains stable and recovers to track the reference.
+- **Observer alone:** Controller employs the encoder speed, the reference is zero and the motor stays at rest, so only the observer error changes. The speed estimate reaches less than `0.1 rad/s` within `21 ms` and stays at this value, close to the simulated `24 ms`.
+- **Observer in the loop:** The controller receives the incorrect speed estimate. The duty gets saturated briefly and the motor moves, but the control loop stays stable and then tracks the reference.
 
-This demonstrates both the estimator's standalone initial-condition recovery and the closed loop's tolerance of observer-state mismatch.
+The first test evaluates the observer on its own while the second checks if an incorrect speed estimate could destabilize the closed loop.
 
 
 ### Kalman estimator (LQG): optimal estimation and a limit-cycle test
