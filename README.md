@@ -131,11 +131,9 @@ A discrete Luenberger observer was added to the 3-state pole placement position 
 
 Results for a `0.20 rad` position step:
 
-- **Steady state:** 
-- **Overshoot:** `1.1%` with observer feedback vs `2.7%` with encoder-speed feedback.
+- **Steady state:** Both settle within one encoder count but in different manners. Using encoder feedback, the motor stops one count below the reference and the integrator slowly ramps the duty to overcome the dead zone and the motor moves by one count. With observer feedback, the position oscillates between the two encoder counts around the reference with a fast duty jitter. 
+- **Overshoot:** `1.1%` with observer feedback vs `2.7%` with encoder-speed feedback (one encoder count difference).
 - **Rise time:** `92 ms` with observer feedback vs `83 ms` with encoder-speed feedback.
-- **Duty ripple:** steady-state duty σ drops from `0.031` to `0.013`; duty peak-to-peak drops from `0.111` to `0.047`.
-- **Trade-off:** steady-state position σ rises from `0.15 mrad` to `1.50 mrad`, while peak-to-peak position motion remains bounded to one encoder count (`3.21 mrad`).
 
 The observer was also tested with an intentionally incorrect initial speed estimate, `omega_hat(0) = 5 rad/s`.
 
