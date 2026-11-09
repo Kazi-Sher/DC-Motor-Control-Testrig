@@ -123,7 +123,7 @@ More weights can be tried to improve the LQR controller performance.
 
 ### Luenberger observer: model-based speed feedback
 
-A discrete Luenberger observer was added to the 3-state pole-placement position controller. The observer estimates `x = [theta, omega]^T` from commanded duty and encoder position; it does not differentiate the encoder signal for speed. The controller gains are unchanged from the PP3-nominal design (`K = [-103.7, 6.04, 0.073]`); only the speed-feedback source is switched between the filtered encoder derivative (`omega_meas`) and observer estimate (`speed_hat`).
+A discrete Luenberger observer was added to the 3-state pole placement position controller. The observer estimates `x = [theta, omega]^T` from commanded duty and encoder position. It does not differentiate the encoder signal for speed. The controller gains are unchanged from the PP3-nominal design (`K = [-103.7, 6.04, 0.073]`). Two speed feedback sources are used: Filtered encoder derivative (`omega_meas`) and observer estimate (`speed_hat`).
 
 <p align="center">
   <img src="results/Luenberger_position_tracking.png" alt="Luenberger observer feedback: position tracking and duty command" width="850">
@@ -131,7 +131,7 @@ A discrete Luenberger observer was added to the 3-state pole-placement position 
 
 Results for a `0.20 rad` position step:
 
-- **Observer feedback:** mean steady-state position `0.20000 rad` vs `0.1990 rad` with encoder-speed feedback; both are sub-encoder-count errors, but observer feedback brings the mean error close to zero.
+- **Steady state:** 
 - **Overshoot:** `1.1%` with observer feedback vs `2.7%` with encoder-speed feedback.
 - **Rise time:** `92 ms` with observer feedback vs `83 ms` with encoder-speed feedback.
 - **Duty ripple:** steady-state duty σ drops from `0.031` to `0.013`; duty peak-to-peak drops from `0.111` to `0.047`.
