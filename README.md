@@ -149,30 +149,31 @@ Convergence results:
 The first test evaluates the observer on its own while the second checks if an incorrect speed estimate could destabilize the closed loop.
 
 
-### Kalman estimator (LQG): optimal estimation and a limit-cycle test
+### Kalman estimator and Linear–quadratic–Gaussian (LQG) control
 
-The observer architecture was kept identical and only the gain was redesigned: the pole-placement gain `L` was replaced by a steady-state Kalman gain. The measurement-noise covariance `R` is set from encoder quantization (`q²/12`, `q = 3.21 mrad`); the process-noise covariance `Q` is tuned for comparable estimator bandwidth. Paired with the LQR controller, this gives the LQG test case.
+The Kalman estimator shares the same structure as the Luenberger observer with the exception that gain `L` is computed differently. Instead of direct placement of observer poles, the gain is decided based on two noise levels: (i) the encoder noise `R` which is set by quantization (`q²/12`, with `q = 3.21 mrad`), (ii) the process noise `Q` representing the unmodelled torque acting on the speed, and it was chosen in a manner to give an estimator os similar speed to the Luenberger observer for reliable comparison.   
+
+Two tests were run: (i) the Kalman estimator replaced the Luenberger observer in the pole placement loop. (ii) the Kalman estimator is combined with the aggressive LQR gain to form the LQG controller.
 
 <p align="center">
   <img src="results/LQG_estimator.png" alt="Kalman estimator: position tracking and free-run convergence" width="850">
 </p>
 
-Estimator results (`0.20 rad` step, Kalman estimate feeding the PP3 loop):
+Results with the pole placement controller (`0.20 rad` step):
 
-- **Tracking:** sub-encoder-count steady-state error and `1.1%` overshoot are on par with the Luenberger result, confirming the Kalman estimator deploys correctly on hardware.
-- **Free-run convergence:** with a deliberately wrong initial speed (`omega_hat(0) = 5 rad/s`), controller decoupled, and motor at rest, the Kalman estimate is underdamped. It first crosses `0.1 rad/s` at `14 ms`, then sustains below threshold from `27 ms`; the Luenberger observer was monotonic and reached the same sustained threshold in `21 ms`.
+- **Tracking:** the same as with the Luenberger observer: `1.1%` overshoot and a steady-state error smaller than one encoder count.
+- **Convergence from a wrong speed estimate** (`omega_hat(0) = 5 rad/s`, motor at rest): because its poles are complex, the Kalman estimate overshoots. It first drops below `0.1 rad/s` at `14 ms` and stays below from `27 ms`, while the Luenberger estimate reached this in `21 ms` without overshoot.
 
-A second test asked whether a cleaner speed estimate could cure the LQR limit cycle found above. The identical LQR-aggressive gain was run with the speed feedback switched between the encoder derivative and the Kalman estimate. So one signal changed and nothing else (reference `0.20 rad`, duty limit `±0.35`).
+The second test checked whether a smoother speed estimate removes the limit cycle of the aggressive LQR gain. The same gain was run twice, once with the encoder speed and once with the Kalman estimate, with everything else unchanged (reference `0.20 rad`, duty limit `±0.35`).
 
 <p align="center">
   <img src="results/LQG_limit_cycle.png" alt="Limit-cycle test: same LQR gain, encoder vs Kalman speed feedback" width="850">
 </p>
 
-Limit-cycle test results:
+- **The limit cycle remains with both speed sources.** The duty switches between the `±0.35` limits and the position never settles.
+- **The oscillation is larger with the Kalman estimate:** overshoot rises from `5.9%` to `18.7%` and peak current from `2.85 A` to `3.33 A`.
+- **Conclusion:** the speed signal is not the cause. The LQR speed gain `K_ω` is about 13 times the pole placement value, which points to the gain itself.
 
-- The limit cycle persists with both speed sources: the duty command thrashes between the `±0.35` saturation rails (steady-state duty `σ ≈ 0.31` with encoder, `0.34` with Kalman) and neither case settles.
-- The Kalman estimate did not suppress the limit cycle, it amplified the position oscillation (overshoot `5.9% → 18.7%`, peak current `2.85 A → 3.33 A`).
-- **Conclusion:** these runs strongly suggest the limit cycle is actuator/dead-zone/saturation driven, not primarily driven by speed estimate noise. The LQR speed gain `K_ω` is about 13× the pole-placement value, so replacing the speed estimate alone is not enough; pole placement with observer feedback remains the clean deployable design on this rig.
 
 
 ## Controller Comparison
@@ -187,7 +188,7 @@ Four controller configurations were tested using the same `0.20 rad` step input 
 |---|---:|---:|---:|---:|---:|---:|---:|
 | PID (classical) | 550 | 1.1 | 641 | −1.1 | 0.003 | 0.06 | 1.94 |
 | PP3 + Luenberger | 92 | 1.1 | 284 | 0.01 | 0.013 | 0.04 | 1.65 |
-| PP3 + Kalman (LQG est.) | 90 | 1.1 | 132 | 0.26 | 0.028 | 0.02 | 1.97 |
+| PP3 + Kalman | 90 | 1.1 | 132 | 0.26 | 0.028 | 0.02 | 1.97 |
 | LQG-aggressive (optimal-control gain + Kalman) | 299 | 18.7 | — * | −0.35 | 0.342 | 0.53 | 3.33 |
 
 <sub>* never settles within `±2%`: sustained limit cycle. Steady-state stats are over the final 1 s; one encoder count = 3.21 mrad.</sub>
