@@ -135,7 +135,7 @@ Results for a `0.20 rad` position step:
 - **Overshoot:** `1.1%` with observer feedback vs `2.7%` with encoder-speed feedback (one encoder count difference).
 - **Rise time:** `92 ms` with observer feedback vs `83 ms` with encoder-speed feedback.
 
-In practice, an observer starts by guessing a speed (usually zero). Obviously this is a wrong estimate initially. How quickly this error is addressed depends on the observer gain `L` and not on the controller. To test this on the rig, the observer was tested with an intentionally wrong initial speed estimate: `omega_hat(0) = 5 rad/s`.
+In practice, an observer starts by guessing a speed (usually zero). Obviously this is a wrong estimate initially. How quickly this error is addressed depends on the observer gain `L` and not on the controller. To test this on the rig, the observer was tested with an intentionally wrong initial speed estimate: $\hat{\omega}(0) = 5$ rad/s.
 
 <p align="center">
   <img src="results/Luenberger_obs_conv.png" alt="Luenberger observer convergence from incorrect initial speed estimate" width="850">
@@ -151,7 +151,7 @@ The first test evaluates the observer on its own while the second checks if an i
 
 ### Kalman estimator and Linear–quadratic–Gaussian (LQG) control
 
-The Kalman estimator shares the same structure as the Luenberger observer with the exception that gain `L` is computed differently. Instead of direct placement of observer poles, the gain is decided based on two noise levels: (i) the encoder noise `R` which is set by quantization (`q²/12`, with `q = 3.21 mrad`), (ii) the process noise `Q` representing the unmodelled torque acting on the speed, and it was chosen in a manner to give an estimator os similar speed to the Luenberger observer for reliable comparison.   
+The Kalman estimator shares the same structure as the Luenberger observer with the exception that gain `L` is computed differently. Instead of direct placement of observer poles, the gain is decided based on two noise levels: (i) the measurement noise `R` based on encoder resolution (one count, `q = 3.21 mrad`, modelled as a uniform error of `±q/2` to give `R = q²/12`), (ii) the process noise `Q` representing the unmodelled torque acting on the speed, and it was chosen to give an estimator of similar speed to the Luenberger observer for reliable comparison.   
 
 Two tests were run: (i) the Kalman estimator replaced the Luenberger observer in the pole placement loop. (ii) the Kalman estimator is combined with the aggressive LQR gain to form the LQG controller.
 
@@ -159,10 +159,11 @@ Two tests were run: (i) the Kalman estimator replaced the Luenberger observer in
   <img src="results/LQG_estimator.png" alt="Kalman estimator: position tracking and free-run convergence" width="850">
 </p>
 
-Results with the pole placement controller (`0.20 rad` step):
+Results with the pole placement controller (`0.20 rad` step response):
 
-- **Tracking:** the same as with the Luenberger observer: `1.1%` overshoot and a steady-state error smaller than one encoder count.
-- **Convergence from a wrong speed estimate** (`omega_hat(0) = 5 rad/s`, motor at rest): because its poles are complex, the Kalman estimate overshoots. It first drops below `0.1 rad/s` at `14 ms` and stays below from `27 ms`, while the Luenberger estimate reached this in `21 ms` without overshoot.
+- **Tracking:** Similar to the Luenberger observer: `1.1%` overshoot with a steady-state error less than one encoder count.
+- **Convergence from a wrong speed estimate** ($\hat{\omega}(0) = 5$ rad/s
+, motor at rest): Since its poles are complex, the Kalman estimate overshoots. It first drops below `0.1 rad/s` at `14 ms` and stays below from `27 ms`, while the Luenberger estimate reached this in `21 ms` without overshoot.
 
 The second test checked whether a smoother speed estimate removes the limit cycle of the aggressive LQR gain. The same gain was run twice, once with the encoder speed and once with the Kalman estimate, with everything else unchanged (reference `0.20 rad`, duty limit `±0.35`).
 
