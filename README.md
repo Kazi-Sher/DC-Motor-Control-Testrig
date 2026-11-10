@@ -30,6 +30,12 @@ results/        Result plots
   <img src="hardware/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="850">
 </p>
 
+
+Motor operation with live current logging in Simulink:
+
+https://github.com/user-attachments/assets/1edbcfd7-645a-4d96-b34e-ac3db928e8e8
+
+
 ## Motor Identification and Model Validation
 
 Motor parameters were identified by classical lumped-element methods: `R_a` from locked-rotor current; `K` and `b` from steady-state voltage–speed and torque–speed measurements; `J` from a coast-down test.
