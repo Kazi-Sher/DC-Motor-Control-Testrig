@@ -100,7 +100,7 @@ The PI speed plant was extended to a 2-state position model `x = [θ, ω]ᵀ` an
 
 ### Pole placement (PP): dead zone discovery and integrator fix
 
-Without the integrator, the controller stalls before reaching the reference because the residual duty falls below the motor's static friction threshold. Adding an integrator state eliminates this offset and the saturation-aware simulation tracks the 3-state hardware response within the noise floor.
+Without the integrator, the controller stalls before reaching the reference because the residual duty falls below the motor's static friction threshold. Adding an integrator state eliminates this offset and the saturation-aware simulation tracks the 3-state hardware response.
 
 <p align="center">
   <img src="results/PP_SS.png" alt="State-space pole placement: dead-zone and integrator fix; model vs hardware" width="850">
