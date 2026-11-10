@@ -143,7 +143,7 @@ In practice, an observer starts by guessing a speed (usually zero). Obviously th
 
 Convergence results:
 
-- **Observer alone:** Controller employs the encoder speed, the reference is zero and the motor stays at rest, so only the observer error changes. The speed estimate reaches less than `0.1 rad/s` within `21 ms` and stays at this value, close to the simulated `24 ms`.
+- **Observer alone:** Controller employs the encoder speed, the reference is zero and the motor stays at rest, so only the observer error changes. The speed estimate reaches less than `0.1 rad/s` within `21 ms` and stays below it, close to the simulated `24 ms`.
 - **Observer in the loop:** The controller receives the incorrect speed estimate. The duty gets saturated briefly and the motor moves, but the control loop stays stable and then tracks the reference.
 
 The first test evaluates the observer on its own while the second checks if an incorrect speed estimate could destabilize the closed loop.
@@ -161,21 +161,22 @@ Two tests were run: (i) the Kalman estimator replaced the Luenberger observer in
 
 Results with the pole placement controller (`0.20 rad` step response):
 
-- **Tracking:** Similar to the Luenberger observer: `1.1%` overshoot with a steady-state error less than one encoder count.
-- **Convergence from a wrong speed estimate** ($\hat{\omega}(0) = 5$ rad/s
-, motor at rest): Since its poles are complex, the Kalman estimate overshoots. It first drops below `0.1 rad/s` at `14 ms` and stays below from `27 ms`, while the Luenberger estimate reached this in `21 ms` without overshoot.
+- **Tracking:** The controller uses the measured position and the Kalman speed estimate. Similar to the Luenberger results, the measured position overshoots by `1.1%` with a steady-state error less than one encoder count. The Kalman position estimate follows the measured position closely and is not used by the controller.
 
-The second test checked whether a smoother speed estimate removes the limit cycle of the aggressive LQR gain. The same gain was run twice, once with the encoder speed and once with the Kalman estimate, with everything else unchanged (reference `0.20 rad`, duty limit `±0.35`).
+- **Convergence from a wrong speed estimate** ($\hat{\omega}(0) = 5$ rad/s, motor at rest): Since its poles are complex, the Kalman estimate overshoots, passing through zero to ~−0.19 rad/s. It first drops below `0.1 rad/s` at `14 ms` and stays below from `27 ms`, while the Luenberger estimate reached this in `21 ms` without overshoot.
+
+Another experiment tested whether a smoother speed estimate eliminates the limit cycle of the aggressive LQR gain. With pole placement controller, the Kalman estimate is smoother than the encoder derived speed since it combines the model with encoder.
+
+The same gain was run twice, once with the encoder speed and once with the Kalman estimate, with everything else unchanged (reference `0.20 rad`, duty limit `±0.35`).
+
 
 <p align="center">
   <img src="results/LQG_limit_cycle.png" alt="Limit-cycle test: same LQR gain, encoder vs Kalman speed feedback" width="850">
 </p>
 
-- **The limit cycle remains with both speed sources.** The duty switches between the `±0.35` limits and the position never settles.
-- **The oscillation is larger with the Kalman estimate:** overshoot rises from `5.9%` to `18.7%` and peak current from `2.85 A` to `3.33 A`.
-- **Conclusion:** the speed signal is not the cause. The LQR speed gain `K_ω` is about 13 times the pole placement value, which points to the gain itself.
-
-
+- **The limit cycle stays with both speed sources.** The duty oscillates between the `±0.35` limits and the position does not settle.
+- **The oscillation is larger with the Kalman estimate:** About `67 mrad` peak-to-peak (21 encoder counts) at 17 Hz against `10 mrad` (3 counts) at 49 Hz with encoder speed. Both oscillate around the reference and peak current rises from `2.85 A` to `3.33 A`.
+- **Conclusion:** The change in the speed source did not eliminate the limit cycle. The likely cause seems to be the controller gain. In aggressive LQR design, the speed is multiplied by a gain 13 times larger than the one used in pole placement design (`K_ω = 0.97` vs `0.073`). To be investigated more later on.  
 
 ## Controller Comparison
 
@@ -190,15 +191,15 @@ Four controller configurations were tested using the same `0.20 rad` step input 
 | PID (classical) | 550 | 1.1 | 641 | −1.1 | 0.003 | 0.06 | 1.94 |
 | PP3 + Luenberger | 92 | 1.1 | 284 | 0.01 | 0.013 | 0.04 | 1.65 |
 | PP3 + Kalman | 90 | 1.1 | 132 | 0.26 | 0.028 | 0.02 | 1.97 |
-| LQG-aggressive (optimal-control gain + Kalman) | 299 | 18.7 | — * | −0.35 | 0.342 | 0.53 | 3.33 |
+| LQG-aggressive (optimal-control gain + Kalman) | 299 | — * | — * | −0.35 | 0.342 | 0.53 | 3.33 |
 
-<sub>* never settles within `±2%`: sustained limit cycle. Steady-state stats are over the final 1 s; one encoder count = 3.21 mrad.</sub>
+<sub>* sustained limit cycle (67 mrad peak-to-peak at 17 Hz around the reference) makes the overshoot and settling time undefined. Steady-state figures are for the final 1 s. One encoder count = 3.21 mrad. </sub>
 
 - **PID** results in a steady-state error smaller than one encoder count (3.2 mrad), but with a rise time about 6 times longer. The motor stops every time the duty falls into the dead zone. The integral term then raises the duty to move the motor again.
 - **Pole placement with observer feedback** is the best overall design: ~`90 ms` rise time, steady-state error of less than one encoder count, and the lowest control effort. A slight difference between the two observers: Luenberger settles with lower duty `σ`, while Kalman settles the fastest.
-- **LQG-aggressive** (aggressive LQR gain with Kalman estimator) overshoots by 18.7 % and keeps oscillating around the reference position. The duty keeps switching between the `±0.35` limits which means the controller behaves as an on/off switch. It uses more than 10 times the control effort and almost twice the peak current of pole placement designs. 
+- **LQG-aggressive** (aggressive LQR gain with Kalman estimator) keeps oscillating around the reference position (67 mrad peak-to-peak at 17 Hz). The duty keeps switching between the `±0.35` limits which means the controller behaves as an on/off switch. It uses more than 10 times the control effort and almost twice the peak current of pole placement designs. 
 
-Main result: Pole placement with an observer resulted in the best performance. Both observers gave similar performance. The aggressive LQR gain oscillated with both speed sources (encoder derivative or Kalman estimate) pointing to the gain as the issue rather than the speed signal.
+Main result: Pole placement with an observer resulted in the best performance. Both observers gave similar performance. The aggressive LQR gain oscillated with both speed sources (encoder derivative or Kalman estimate) pointing to the gain as the likely issue rather than the speed signal.
 
 
 ## Citation
