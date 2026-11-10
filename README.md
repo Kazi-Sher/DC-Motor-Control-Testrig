@@ -8,7 +8,15 @@ A low-cost open-source experimental test rig for DC motor characterization and e
 
 Motor operation with live current logging in Simulink:
 
+<table align="center">
+<tr>
+<td>
+
 https://github.com/user-attachments/assets/1edbcfd7-645a-4d96-b34e-ac3db928e8e8
+
+</td>
+</tr>
+</table>
 
 ## Repository Layout
 
