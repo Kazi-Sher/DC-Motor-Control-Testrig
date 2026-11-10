@@ -4,7 +4,7 @@ A low-cost open-source experimental test rig for DC motor characterization and e
 
 ## Repository Layout
 ```text
-hardware/       Hardware datasheets, wiring diagram, and rig image
+hardware/       Hardware datasheets, wiring diagram, and rig image/video
 firmware/       STM32 firmware, generated embedded code, board-level configuration
 matlab/         MATLAB scripts/Simulink models for identification, validation, control
 data/           Raw and processed experiment data used to reproduce plots/metrics
