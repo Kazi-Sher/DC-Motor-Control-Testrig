@@ -1,8 +1,17 @@
 # DC Motor Control Test Rig
 
-A low-cost open-source experimental test rig for DC motor characterization and embedded control. The rig supports reproducible experiments from basic motor modeling to advanced control design. Pushing each controller to its best possible tuning is not the current goal of the project.
+A low-cost open-source experimental test rig for DC motor characterization and embedded control. The rig supports reproducible experiments from basic motor modeling to advanced control design.
+
+<p align="center">
+  <img src="hardware/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="850">
+</p>
+
+Motor operation with live current logging in Simulink:
+
+https://github.com/user-attachments/assets/1edbcfd7-645a-4d96-b34e-ac3db928e8e8
 
 ## Repository Layout
+
 ```text
 hardware/       Hardware datasheets, wiring diagram, and rig image/video
 firmware/       STM32 firmware, generated embedded code, board-level configuration
@@ -11,30 +20,14 @@ data/           Raw and processed experiment data used to reproduce plots/metric
 results/        Result plots
 ```
 
-## Roadmap
+## Completed Experiments
+
 - [x] Hardware rig assembled
 - [x] Position and speed based model validation
 - [x] PI speed control
 - [x] State-space position control (pole placement + LQR)
 - [x] Observer-based estimation (Luenberger + Kalman / LQG)
 - [x] Controller comparison (PID, observer-based pole placement, and LQG)
-
-## Test Rig
-- STM32 Nucleo-F446RE microcontroller board
-- 12 V DC geared motor with quadrature encoder, JGA25-371 class
-- IBT-2 / BTS7960 H-bridge motor driver
-- ACS712 5 A current sensor
-- 12 V DC power supply
-
-<p align="center">
-  <img src="hardware/Labels_Wiring_Merged.png" alt="Labeled DC motor control test rig" width="850">
-</p>
-
-
-Motor operation with live current logging in Simulink:
-
-https://github.com/user-attachments/assets/1edbcfd7-645a-4d96-b34e-ac3db928e8e8
-
 
 ## Motor Identification and Model Validation
 
