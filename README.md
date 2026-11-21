@@ -21,10 +21,10 @@ https://github.com/user-attachments/assets/1edbcfd7-645a-4d96-b34e-ac3db928e8e8
 ## Repository Layout
 
 ```text
-hardware/       Hardware datasheets, wiring diagram, and rig image/video
+hardware/       Hardware datasheets, wiring diagram, and rig image / video
 firmware/       STM32 firmware, generated embedded code, board-level configuration
-matlab/         MATLAB scripts/Simulink models for identification, validation, control
-data/           Raw and processed experiment data used to reproduce plots/metrics
+matlab/         MATLAB scripts / Simulink models for identification, validation, control
+data/           Raw and processed experiment data used to reproduce plots / metrics
 results/        Result plots
 ```
 
